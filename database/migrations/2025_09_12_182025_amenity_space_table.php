@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('amenity_space', function (Blueprint $table) {
+        Schema::create('amenity_space', function (Blueprint $table) {
             $table->id();
             $table->string('pid')->unique();
             $table->foreignId('amenity_id')->constrained('amenities')->onDelete('cascade');
