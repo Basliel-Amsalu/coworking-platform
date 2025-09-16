@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('first_name')->nullable()->after('name');
             $table->string('last_name')->nullable()->after('first_name');   
-            $table->enum('role', ['admin', 'space_manager', 'member'])->default('member')->after('password');
-            $table->string('phone')->nullable()->after('role');
+            $table->string('phone')->nullable()->after('last_name');
             $table->string('address')->nullable()->after('phone');
             $table->string('profile_photo')->nullable()->after('address');
             $table->date('date_of_birth')->nullable()->after('profile_photo');
