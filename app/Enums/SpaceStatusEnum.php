@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum SpaceStatusEnum
+enum SpaceStatusEnum: string
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
