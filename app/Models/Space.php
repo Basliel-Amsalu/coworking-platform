@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\SpaceStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Space extends Model
 {
@@ -12,7 +13,6 @@ class Space extends Model
 
     protected $fillable = [
         'pid',
-        'manager_id',
         'name',
         'location',
         'description',
@@ -40,11 +40,20 @@ class Space extends Model
 
     public function meeting_rooms()
     {
-        return $this->hasMany(MeetingRooms::class, 'space_id');
+        return $this->hasMany(MeetingRoom::class, 'space_id');
     }
 
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($space) {
+            if (empty($space->pid)) {
+                $space->pid = (string) Str::orderedUuid();
+            }
+        });
     }
 }
