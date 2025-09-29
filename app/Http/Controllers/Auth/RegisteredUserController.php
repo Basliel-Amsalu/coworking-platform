@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
@@ -18,7 +19,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -27,15 +28,22 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
+            'pid' => Str::orderedUuid(),
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
         ]);
 
-        event(new Registered($user));
+        $token = $user->createToken('api-token')->plainTextToken;
+        // event(new Registered($user));
 
-        Auth::login($user);
 
-        return response()->noContent();
+        // return response()->noContent();
+        
+        return Response()->json([
+            'user' => $user,
+            'token' => $token,
+            'message' => 'User created successfully'
+        ], 201);
     }
 }
