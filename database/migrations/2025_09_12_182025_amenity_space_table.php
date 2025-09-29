@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('amenity_space', function (Blueprint $table) {
             $table->id();
-            $table->string('pid')->unique();
             $table->foreignId('amenity_id')->constrained('amenities')->onDelete('cascade');
             $table->foreignId('space_id')->constrained('spaces')->onDelete('cascade');
             $table->timestamps();
