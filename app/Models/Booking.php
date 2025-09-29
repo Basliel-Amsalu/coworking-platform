@@ -6,6 +6,7 @@ use App\Enums\BookingStatusEnum;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -13,7 +14,6 @@ class Booking extends Model
 
     protected $fillable = [
         'pid',
-        'user_id',
         'bookable_type',
         'bookable_id',
         'start_datetime',
@@ -39,5 +39,14 @@ class Booking extends Model
     {
         return $this->morphTo();
     }
-    
+
+    protected static function booted()
+    {
+        static::creating(function ($booking) {
+            if (empty($booking->pid)) {
+                $booking->pid = (string) Str::orderedUuid();
+            }
+        });
+    }
+
 }

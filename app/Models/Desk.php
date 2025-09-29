@@ -6,14 +6,14 @@ use App\Enums\AssetStatusEnum;
 use App\Enums\DeskTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Desk extends Model
 {
     use HasFactory;
 
-    protected $fillables = [
+    protected $fillable = [
         'pid',
-        'space_id',
         'name',
         'type',
         'hourly_rate',
@@ -35,5 +35,14 @@ class Desk extends Model
     public function bookings()
     {
         return $this->morphMany(Booking::class, 'bookable');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($desk) {
+            if (empty($desk->pid)) {
+                $desk->pid = (string) Str::orderedUuid();
+            }
+        });
     }
 }
