@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\AssetStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class MeetingRooms extends Model
+class MeetingRoom extends Model
 {
     use HasFactory;
 
-    protected $fillables = [
+    protected $fillable = [
         'pid',
-        'space_id',
         'name',
         'capacity',
         'hourly_rate',
@@ -36,5 +37,14 @@ class MeetingRooms extends Model
     public function equipment()
     {
         return $this->belongsToMany(Equipment::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($meetingRoom) {
+            if (empty($meetingRoom->pid)) {
+                $meetingRoom->pid = (string) Str::orderedUuid();
+            }
+        });
     }
 }
